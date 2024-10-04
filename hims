@@ -1,0 +1,441 @@
+-- Create the database
+CREATE DATABASE hims;
+
+-- Switch to the database
+USE hims;
+
+-- Create the patients table with address normalization
+CREATE TABLE patients (
+    patient_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    dob DATE,
+    gender ENUM('Male', 'Female', 'Other'),
+    contact_number VARCHAR(15),
+    email VARCHAR(100),
+    emergency_contact_name VARCHAR(100),
+    emergency_contact_number VARCHAR(15),
+    insurance_id VARCHAR(50),
+    street VARCHAR(100),   -- Street for address normalization
+    city VARCHAR(50),      -- City for address normalization
+    state VARCHAR(50),     -- State for address normalization
+    zip_code VARCHAR(10),  -- Zip code for address normalization
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    emergency_contact_phone VARCHAR(15),  -- Added emergency contact phone
+    ward VARCHAR(100)
+);
+
+-- Insert sample patients data with address normalization
+INSERT INTO patients (patient_id, first_name, last_name, dob, gender, contact_number, email, emergency_contact_name, emergency_contact_number, insurance_id, street, city, state, zip_code, emergency_contact_phone,ward) 
+VALUES
+(1, 'John', 'Doe', '1985-07-12', 'Male', '555-1234', 'john.doe@email.com', 'Jane Doe', '555-4321', 'INS12345', '123 Elm St', 'Springfield', 'IL', '62701', '555-4321','Pediatrics'),
+(2, 'Mary', 'Smith', '1992-03-22', 'Female', '555-2345', 'mary.smith@email.com', 'Robert Smith', '555-5432', 'INS67890', '456 Oak St', 'Springfield', 'IL', '62702', '555-5432','Medicine'),
+(3, 'Michael', 'Johnson', '1988-11-05', 'Male', '555-3456', 'michael.johnson@email.com', 'Emily Johnson', '555-6543', 'INS11223', '789 Pine St', 'Springfield', 'IL', '62703', '555-6543','Pediatrics'),
+(4, 'Patricia', 'Williams', '1990-05-17', 'Female', '555-4567', 'patricia.williams@email.com', 'Charles Williams', '555-7654', 'INS44556', '123 Maple St', 'Springfield', 'IL', '62704', '555-7654','Medicine'),
+(5, 'James', 'Brown', '1977-02-28', 'Male', '555-5678', 'james.brown@email.com', 'Linda Brown', '555-8765', 'INS77889', '321 Birch St', 'Springfield', 'IL', '62705', '555-8765','Pediatrics'),
+(6, 'Linda', 'Davis', '1995-08-13', 'Female', '555-6789', 'linda.davis@email.com', 'John Davis', '555-9876', 'INS99000', '654 Cedar St', 'Springfield', 'IL', '62706', '555-9876','Medicine'),
+(7, 'Robert', 'Miller', '1983-01-29', 'Male', '555-7890', 'robert.miller@email.com', 'Sarah Miller', '555-0987', 'INS22334', '987 Fir St', 'Springfield', 'IL', '62707', '555-0987','Pediatrics'),
+(8, 'Susan', 'Wilson', '1990-12-25', 'Female', '555-8901', 'susan.wilson@email.com', 'William Wilson', '555-1098', 'INS55667', '345 Redwood St', 'Springfield', 'IL', '62708', '555-1098','Medicine'),
+(9, 'David', 'Moore', '1982-07-04', 'Male', '555-9012', 'david.moore@email.com', 'Jennifer Moore', '555-2109', 'INS88990', '678 Spruce St', 'Springfield', 'IL', '62709', '555-2109','Pediatrics'),
+(10, 'Jennifer', 'Taylor', '1993-11-18', 'Female', '555-0123', 'jennifer.taylor@email.com', 'Brian Taylor', '555-3210', 'INS33445', '123 Birchwood Dr', 'Springfield', 'IL', '62710', '555-3210','Medicine'),
+(11, 'William', 'Anderson', '1980-03-02', 'Male', '555-1234', 'william.anderson@email.com', 'Rachel Anderson', '555-4321', 'INS66778', '345 Pinewood Dr', 'Springfield', 'IL', '62711', '555-4321','Pediatrics'),
+(12, 'Karen', 'Thomas', '1991-07-19', 'Female', '555-2345', 'karen.thomas@email.com', 'Mark Thomas', '555-5432', 'INS11122', '987 Willow Rd', 'Springfield', 'IL', '62712', '555-5432','Medicine'),
+(13, 'Joseph', 'Jackson', '1989-04-25', 'Male', '555-3456', 'joseph.jackson@email.com', 'Helen Jackson', '555-6543', 'INS33456', '432 Cedar Ln', 'Springfield', 'IL', '62713', '555-6543','Pediatrics'),
+(14, 'Mary', 'White', '1975-06-12', 'Female', '555-4567', 'mary.white@email.com', 'George White', '555-7654', 'INS44567', '765 Oak Rd', 'Springfield', 'IL', '62714', '555-7654','Medicine'),
+(15, 'Christopher', 'Harris', '1982-09-30', 'Male', '555-5678', 'christopher.harris@email.com', 'Paula Harris', '555-8765', 'INS55678', '876 Birch St', 'Springfield', 'IL', '62715', '555-8765','Pediatrics'),
+(16, 'Angela', 'Clark', '1996-02-20', 'Female', '555-6789', 'angela.clark@email.com', 'Steven Clark', '555-9876', 'INS66789', '234 Redwood Dr', 'Springfield', 'IL', '62716', '555-9876','Medicine'),
+(17, 'Brian', 'Lewis', '1984-03-15', 'Male', '555-7890', 'brian.lewis@email.com', 'Teresa Lewis', '555-0987', 'INS77890', '567 Cedar St', 'Springfield', 'IL', '62717', '555-0987','Medicine'),
+(18, 'Emily', 'Robinson', '1992-04-18', 'Female', '555-8901', 'emily.robinson@email.com', 'Frank Robinson', '555-1098', 'INS88901', '876 Fir St', 'Springfield', 'IL', '62718', '555-1098','Pediatrics'),
+(19, 'Daniel', 'Walker', '1980-08-25', 'Male', '555-9012', 'daniel.walker@email.com', 'Laura Walker', '555-2109', 'INS99012', '321 Maple St', 'Springfield', 'IL', '62719', '555-2109','Medicine'),
+(20, 'Elizabeth', 'Hall', '1987-10-11', 'Female', '555-0123', 'elizabeth.hall@email.com', 'Paul Hall', '555-3210', 'INS11234', '234 Pine St', 'Springfield', 'IL', '62720', '555-3210','Pediatrics');
+
+
+CREATE TABLE doctors (
+    doctor_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    specialty VARCHAR(100),
+    contact_number VARCHAR(15),
+    email VARCHAR(100),
+    hire_date DATE,
+    salary DECIMAL(10, 2),
+    department VARCHAR(100),  -- Added department field
+    years_of_experience INT,  -- Added years_of_experience field
+    certification VARCHAR(200),  -- Added certification field
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_specialty (specialty)
+);
+
+
+INSERT INTO doctors (doctor_id, first_name, last_name, specialty, contact_number, email, hire_date, salary, department, years_of_experience, certification)
+VALUES
+(1, 'Sarah', 'Johnson', 'Cardiology', '1234567890', 'sarah.johnson@hospital.com', '2015-05-01', 80000.00, 'Cardiology', 9, 'Board Certified in Cardiovascular Disease'),
+(2, 'Mike', 'Williams', 'Orthopedics', '9876543210', 'mike.williams@hospital.com', '2017-08-15', 85000.00, 'Orthopedic Surgery', 7, 'Fellowship in Orthopedic Trauma'),
+(3, 'Emily', 'Davis', 'Neurology', '1122334455', 'emily.davis@hospital.com', '2018-01-10', 95000.00, 'Neurology', 6, 'Certified in Clinical Neurology'),
+(4, 'John', 'Brown', 'Pediatrics', '2233445566', 'john.brown@hospital.com', '2016-04-22', 78000.00, 'Pediatrics', 8, 'Board Certified Pediatrician'),
+(5, 'Lily', 'Miller', 'Oncology', '3344556677', 'lily.miller@hospital.com', '2019-06-30', 98000.00, 'Oncology', 5, 'Certified in Medical Oncology'),
+(6, 'David', 'Wilson', 'Dermatology', '4455667788', 'david.wilson@hospital.com', '2014-09-18', 90000.00, 'Dermatology', 10, 'Board Certified in Dermatology'),
+(7, 'Olivia', 'Moore', 'Gastroenterology', '5566778899', 'olivia.moore@hospital.com', '2015-03-20', 88000.00, 'Gastroenterology', 9, 'Certified in Digestive Diseases'),
+(8, 'James', 'Taylor', 'Endocrinology', '6677889900', 'james.taylor@hospital.com', '2017-11-14', 82000.00, 'Endocrinology', 7, 'Certified in Endocrine Disorders'),
+(9, 'Mia', 'Anderson', 'General Surgery', '7788990011', 'mia.anderson@hospital.com', '2020-01-05', 86000.00, 'Surgery', 4, 'Fellowship in General Surgery'),
+(10, 'Benjamin', 'Thomas', 'Urology', '8899001122', 'benjamin.thomas@hospital.com', '2016-12-09', 91000.00, 'Urology', 8, 'Board Certified in Urology');
+
+
+CREATE TABLE appointments (
+    appointment_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT,
+    doctor_id INT,
+    appointment_date DATE,
+    appointment_time TIME,
+    duration INT,  -- Added duration field
+    room_number VARCHAR(10),  -- Added room_number field
+    status ENUM('Scheduled', 'Completed', 'Cancelled'),
+    reason TEXT,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_patient (patient_id),
+    INDEX idx_doctor (doctor_id),
+    INDEX idx_appointment_date (appointment_date)
+);
+
+
+INSERT INTO appointments (appointment_id, patient_id, doctor_id, appointment_date, appointment_time, duration, room_number, status, reason)
+VALUES
+(1, 1, 1, '2024-10-05', '09:00:00', 30, '101A', 'Scheduled', 'Routine check-up'),
+(2, 2, 2, '2024-10-06', '10:30:00', 45, '202B', 'Completed', 'Follow-up consultation'),
+(3, 3, 3, '2024-10-07', '11:00:00', 20, '303C', 'Scheduled', 'Blood test results discussion'),
+(4, 4, 4, '2024-10-08', '14:00:00', 30, '404D', 'Cancelled', 'Personal reasons'),
+(5, 5, 5, '2024-10-09', '15:30:00', 50, '505E', 'Completed', 'Physical therapy consultation'),
+(6, 6, 6, '2024-10-10', '08:30:00', 60, '606F', 'Scheduled', 'Annual check-up'),
+(7, 7, 7, '2024-10-11', '13:00:00', 40, '707G', 'Scheduled', 'Chronic pain assessment'),
+(8, 8, 8, '2024-10-12', '16:00:00', 30, '808H', 'Completed', 'Emergency care'),
+(9, 9, 9, '2024-10-13', '10:00:00', 25, '909I', 'Completed', 'Medication review'),
+(10, 10, 10, '2024-10-14', '12:00:00', 45, '1010J', 'Scheduled', 'Surgical consultation');
+
+
+CREATE TABLE bills (
+    bill_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT,
+    appointment_id INT,
+    total_amount DECIMAL(10, 2),
+    amount_paid DECIMAL(10, 2),
+    amount_due DECIMAL(10, 2),
+    payment_status ENUM('Paid', 'Pending', 'Partially Paid'),
+    payment_method VARCHAR(50),  -- Added payment method
+    insurance_coverage DECIMAL(10, 2),  -- Added insurance coverage
+    bill_date DATE,
+    due_date DATE,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+INSERT INTO bills (patient_id, appointment_id, total_amount, amount_paid, amount_due, payment_status, payment_method, insurance_coverage, bill_date, due_date)
+VALUES
+(1, 1, 500.00, 500.00, 0.00, 'Paid', 'Credit Card', 200.00, '2024-10-10', '2024-10-15'),
+(2, 2, 300.00, 150.00, 150.00, 'Partially Paid', 'Cash', 100.00, '2024-10-12', '2024-10-20'),
+(3, 3, 450.00, 450.00, 0.00, 'Paid', 'Insurance', 250.00, '2024-10-14', '2024-10-17'),
+(4, 4, 600.00, 400.00, 200.00, 'Partially Paid', 'Debit Card', 300.00, '2024-10-16', '2024-10-18'),
+(5, 5, 350.00, 350.00, 0.00, 'Paid', 'Credit Card', 150.00, '2024-10-17', '2024-10-22'),
+(6, 6, 200.00, 100.00, 100.00, 'Partially Paid', 'Cash', 80.00, '2024-10-19', '2024-10-25'),
+(7, 7, 250.00, 250.00, 0.00, 'Paid', 'Credit Card', 100.00, '2024-10-20', '2024-10-25'),
+(8, 8, 450.00, 0.00, 450.00, 'Pending', 'Insurance', 200.00, '2024-10-22', '2024-10-27'),
+(9, 9, 300.00, 300.00, 0.00, 'Paid', 'Debit Card', 120.00, '2024-10-23', '2024-10-28'),
+(10, 10, 550.00, 500.00, 50.00, 'Partially Paid', 'Insurance', 250.00, '2024-10-24', '2024-10-30');
+
+-- Create the treatments table
+CREATE TABLE treatments (
+    treatment_id INT AUTO_INCREMENT PRIMARY KEY,
+    appointment_id INT,
+    diagnosis VARCHAR(255),
+    treatment VARCHAR(255),
+    prescribed_medications TEXT,
+    treatment_status VARCHAR(50),  -- Added treatment status
+    treatment_cost DECIMAL(10, 2),  -- Added treatment cost
+    FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+INSERT INTO treatments (appointment_id, diagnosis, treatment, prescribed_medications, treatment_status, treatment_cost)
+VALUES
+(1, 'Hypertension', 'Lifestyle changes and medication', 'Lisinopril, Aspirin', 'Ongoing', 100.00),
+(2, 'Knee Osteoarthritis', 'Physiotherapy and medication', 'Ibuprofen, Paracetamol', 'Completed', 200.00),
+(3, 'Diabetes Mellitus', 'Insulin therapy and diet control', 'Metformin, Insulin', 'Ongoing', 150.00),
+(4, 'Chronic Migraine', 'Pain management and preventive therapy', 'Sumatriptan, Topiramate', 'Ongoing', 120.00),
+(5, 'Asthma', 'Inhaler therapy and lifestyle modifications', 'Albuterol, Fluticasone', 'Completed', 180.00),
+(6, 'COPD', 'Pulmonary rehabilitation and medication', 'Salbutamol, Prednisone', 'Ongoing', 220.00),
+(7, 'Back Pain', 'Physical therapy and pain management', 'Acetaminophen, Naproxen', 'Completed', 140.00),
+(8, 'Depression', 'Cognitive Behavioral Therapy and medication', 'Fluoxetine, Sertraline', 'Ongoing', 90.00),
+(9, 'Anxiety', 'Counseling and medication', 'Alprazolam, Escitalopram', 'Ongoing', 110.00),
+(10, 'Acid Reflux', 'Diet modification and medication', 'Omeprazole, Ranitidine', 'Completed', 70.00);
+
+-- Create the staff table
+CREATE TABLE staff (
+    staff_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    role VARCHAR(100),
+    contact_number VARCHAR(15),
+    email VARCHAR(100),
+    hire_date DATE,
+    salary DECIMAL(10, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+INSERT INTO staff (first_name, last_name, role, contact_number, email, hire_date, salary)
+VALUES
+('Emma', 'Brown', 'Nurse', '2345678901', 'emma.brown@hospital.com', '2018-03-01', 40000.00),
+('Olivia', 'Davis', 'Technician', '3456789012', 'olivia.davis@hospital.com', '2020-06-01', 42000.00),
+('Sophia', 'Miller', 'Receptionist', '4567890123', 'sophia.miller@hospital.com', '2019-02-15', 35000.00),
+('Ava', 'Wilson', 'Nurse', '5678901234', 'ava.wilson@hospital.com', '2017-07-20', 45000.00),
+('Isabella', 'Moore', 'Technician', '6789012345', 'isabella.moore@hospital.com', '2021-01-10', 43000.00),
+('Mia', 'Taylor', 'Nurse', '7890123456', 'mia.taylor@hospital.com', '2016-09-01', 44000.00),
+('Liam', 'Anderson', 'Technician', '8901234567', 'liam.anderson@hospital.com', '2018-11-12', 42000.00),
+('Noah', 'Thomas', 'Receptionist', '9012345678', 'noah.thomas@hospital.com', '2020-04-20', 37000.00),
+('Lucas', 'Jackson', 'Nurse', '1234567890', 'lucas.jackson@hospital.com', '2017-10-11', 46000.00),
+('Charlotte', 'White', 'Technician', '2345678901', 'charlotte.white@hospital.com', '2019-03-30', 44000.00),
+('Amelia', 'Harris', 'Nurse', '3456789012', 'amelia.harris@hospital.com', '2021-05-05', 45000.00),
+('Harper', 'Martin', 'Receptionist', '4567890123', 'harper.martin@hospital.com', '2019-07-09', 36000.00),
+('Ethan', 'Garcia', 'Technician', '5678901234', 'ethan.garcia@hospital.com', '2020-10-22', 43000.00),
+('Benjamin', 'Martinez', 'Nurse', '6789012345', 'benjamin.martinez@hospital.com', '2016-12-02', 47000.00),
+('Ella', 'Roberts', 'Technician', '7890123456', 'ella.roberts@hospital.com', '2018-04-16', 44000.00),
+('James', 'Clark', 'Receptionist', '8901234567', 'james.clark@hospital.com', '2017-06-25', 38000.00),
+('Jack', 'Lewis', 'Nurse', '9012345678', 'jack.lewis@hospital.com', '2021-09-03', 46000.00),
+('Grace', 'Young', 'Technician', '1234567890', 'grace.young@hospital.com', '2019-02-25', 42000.00),
+('Henry', 'King', 'Receptionist', '2345678901', 'henry.king@hospital.com', '2020-07-19', 37500.00),
+('Zoe', 'Scott', 'Nurse', '3456789012', 'zoe.scott@hospital.com', '2016-11-11', 45000.00);
+
+-- Create the hospital_rooms table
+CREATE TABLE hospital_rooms (
+    room_id INT AUTO_INCREMENT PRIMARY KEY,
+    room_number VARCHAR(10),
+    room_type VARCHAR(50),
+    capacity INT,
+    status ENUM('Occupied', 'Available', 'Under Maintenance'),
+    cost_per_day DECIMAL(10, 2),  -- Added cost per day
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_availability (status)
+);
+
+DESCRIBE hospital_rooms;
+
+ALTER TABLE hospital_rooms ADD availability VARCHAR(20);
+
+INSERT INTO hospital_rooms (room_id, room_type, capacity, availability) VALUES
+(101, 'Single', 1, 'Available'),
+(102, 'Single', 1, 'Available'),
+(103, 'Double', 2, 'Available'),
+(104, 'Double', 2, 'Available'),
+(105, 'Ward', 4, 'Available'),
+(106, 'Ward', 4, 'Available'),
+(107, 'ICU', 1, 'Available'),
+(108, 'ICU', 1, 'Available'),
+(109, 'Single', 1, 'Available'),
+(110, 'Single', 1, 'Available'),
+(111, 'Double', 2, 'Available'),
+(112, 'Double', 2, 'Available'),
+(113, 'Ward', 4, 'Available'),
+(114, 'Ward', 4, 'Available'),
+(115, 'ICU', 1, 'Available'),
+(116, 'ICU', 1, 'Available'),
+(117, 'Single', 1, 'Available'),
+(118, 'Single', 1, 'Available'),
+(119, 'Double', 2, 'Available'),
+(120, 'Double', 2, 'Available');
+
+
+
+-- Create the room_assignments table
+CREATE TABLE room_assignments (
+    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT,
+    room_id INT,
+    admission_date DATE,
+    discharge_date DATE,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY (room_id) REFERENCES hospital_rooms(room_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+SELECT room_id FROM hospital_rooms;
+INSERT INTO room_assignments (patient_id, room_id, admission_date, discharge_date) VALUES
+(1, 101, '2024-10-12', '2024-10-15'),
+(2, 102, '2024-10-13', '2024-10-16'),
+(3, 103, '2024-10-14', '2024-10-17'),
+(4, 104, '2024-10-15', '2024-10-18'),
+(5, 105, '2024-10-16', '2024-10-19'),
+(6, 106, '2024-10-17', '2024-10-20'),
+(7, 107, '2024-10-18', '2024-10-21'),
+(8, 108, '2024-10-19', '2024-10-22'),
+(9, 109, '2024-10-20', '2024-10-23'),
+(10, 110, '2024-10-21', '2024-10-24'),
+(11, 111, '2024-10-22', '2024-10-25'),
+(12, 112, '2024-10-23', '2024-10-26'),
+(13, 113, '2024-10-24', '2024-10-27'),
+(14, 114, '2024-10-25', '2024-10-28'),
+(15, 115, '2024-10-26', '2024-10-29'),
+(16, 116, '2024-10-27', '2024-10-30'),
+(17, 117, '2024-10-28', '2024-10-31'),
+(18, 118, '2024-10-29', '2024-11-01'),
+(19, 119, '2024-10-30', '2024-11-02'),
+(20, 120, '2024-10-31', '2024-11-03');
+
+
+CREATE TABLE prescriptions (
+    prescription_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT,
+    medicine_name VARCHAR(255),
+    dosage VARCHAR(255),
+    start_date DATE,
+    end_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+);
+INSERT INTO prescriptions (patient_id, medicine_name, dosage, start_date, end_date)
+VALUES
+(1, 'Lisinopril', '10 mg', '2024-10-01', '2024-11-01'),
+(2, 'Metformin', '500 mg', '2024-10-02', '2024-11-02'),
+(3, 'Ibuprofen', '200 mg', '2024-10-03', '2024-10-10'),
+(4, 'Sertraline', '50 mg', '2024-10-04', '2024-11-04');
+
+
+
+CREATE TABLE surgeries (
+    surgery_id INT AUTO_INCREMENT PRIMARY KEY,
+    surgery_name VARCHAR(255) NOT NULL,
+    surgery_date DATE NOT NULL,
+    surgeon_id INT,
+    FOREIGN KEY (surgeon_id) REFERENCES doctors(doctor_id) -- Assuming doctors table exists
+);
+INSERT INTO surgeries (surgery_name, surgery_date, surgeon_id) VALUES
+('Appendectomy', '2024-10-05', 3),
+('Knee Replacement', '2024-10-06', 3),
+('Gallbladder Removal', '2024-10-07', 2);
+
+CREATE TABLE medical_history (
+    history_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT,
+    diagnosis VARCHAR(255),
+    treatment VARCHAR(255),
+    treatment_date DATE,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+);
+
+
+
+-- 1. Get all appointments for a patient
+SELECT a.appointment_id, d.first_name AS doctor_first_name, d.last_name AS doctor_last_name, a.appointment_date, a.appointment_time, a.status
+FROM appointments a
+JOIN doctors d ON a.doctor_id = d.doctor_id
+WHERE a.patient_id = 2;  -- Change patient_id as needed
+
+-- 2. Get all bills for a patient
+SELECT b.bill_id, b.total_amount, b.amount_paid, b.amount_due, b.payment_status, b.bill_date, b.due_date
+FROM bills b
+WHERE b.patient_id = 2;  -- Change patient_id as needed
+
+-- 3. Get all treatments for an appointment
+SELECT t.diagnosis, t.treatment, t.prescribed_medications
+FROM treatments t
+JOIN appointments a ON t.appointment_id = a.appointment_id
+WHERE a.appointment_id = 2;  -- Change appointment_id as needed
+
+-- 4. Get all doctors in a specialty
+SELECT * FROM doctors 
+WHERE specialty = 'Neurology';  -- Change specialty as needed
+
+-- 5. Get room assignments for a patient
+SELECT r.room_number, r.room_type, ra.admission_date, ra.discharge_date
+FROM room_assignments ra
+JOIN hospital_rooms r ON ra.room_id = r.room_id
+WHERE ra.patient_id = 2;  -- Change patient_id as needed
+
+-- 6. Get all staff members with a specific role
+SELECT s.first_name, s.last_name, s.role, s.contact_number, s.email
+FROM staff s
+WHERE s.role = 'Nurse';  -- Change role as needed
+
+-- 7. Get all patients assigned to a specific doctor
+SELECT p.first_name, p.last_name, p.contact_number 
+FROM patients p 
+JOIN appointments a ON p.patient_id = a.patient_id 
+WHERE a.doctor_id = 3 -- Change doctor_id as needed
+LIMIT 0, 1000;
+  
+
+-- 8. Get all prescriptions for a patient
+SELECT p.prescription_id, p.medicine_name, p.dosage, p.start_date, p.end_date
+FROM prescriptions p
+WHERE p.patient_id = 2;  -- Change patient_id as needed
+
+-- 9. Get the number of appointments for a specific doctor
+SELECT COUNT(a.appointment_id) AS total_appointments
+FROM appointments a
+WHERE a.doctor_id = 3;  -- Change doctor_id as needed
+
+-- 10. Get all hospital rooms and their availability status
+SELECT r.room_number, r.room_type, r.status 
+FROM hospital_rooms r 
+LIMIT 0, 1000;
+
+
+-- 11. Get patient demographics by age group
+SELECT COUNT(p.patient_id) AS total_patients,
+    CASE
+        WHEN TIMESTAMPDIFF(YEAR, p.dob, CURDATE()) < 18 THEN 'Under 18'
+        WHEN TIMESTAMPDIFF(YEAR, p.dob, CURDATE()) BETWEEN 18 AND 65 THEN '18-65'
+        ELSE 'Over 65'
+    END AS age_group
+FROM patients p
+GROUP BY age_group
+LIMIT 0, 1000;
+
+
+-- 12. Get upcoming appointments for a specific patient
+SELECT a.appointment_id, d.first_name AS doctor_first_name, d.last_name AS doctor_last_name, a.appointment_date, a.appointment_time, a.status
+FROM appointments a
+JOIN doctors d ON a.doctor_id = d.doctor_id
+WHERE a.patient_id = 2  -- Change patient_id as needed
+AND a.appointment_date >= CURRENT_DATE;
+
+-- 13. Get average bill amount for patients in a specific ward
+SELECT AVG(b.total_amount) AS average_bill
+FROM bills b
+JOIN patients p ON b.patient_id = p.patient_id
+WHERE p.ward = 'Pediatrics';  -- Change ward as needed
+
+-- 14. Get all surgeries performed by a specific surgeon
+SELECT s.surgery_id, s.surgery_name, s.surgery_date
+FROM surgeries s
+WHERE s.surgeon_id = 3;  -- Change surgeon_id as needed
+
+-- 15. Get all treatments for patients in a specific room
+SELECT t.diagnosis, t.treatment, t.prescribed_medications
+FROM treatments t
+JOIN appointments a ON t.appointment_id = a.appointment_id
+JOIN room_assignments ra ON a.patient_id = ra.patient_id
+WHERE ra.room_id = 1;  -- Change room_id as needed
+
+
+
+-- retrieve patient details along with their last appointment and doctor information --
+SELECT 
+    p.first_name AS patient_first_name,
+    p.last_name AS patient_last_name,
+    d.first_name AS doctor_first_name,
+    d.last_name AS doctor_last_name,
+    a.appointment_date,
+    a.appointment_time,
+    a.status
+FROM 
+    patients p
+JOIN 
+    appointments a ON p.patient_id = a.patient_id
+JOIN 
+    doctors d ON a.doctor_id = d.doctor_id
+ORDER BY 
+    a.appointment_date DESC;
+

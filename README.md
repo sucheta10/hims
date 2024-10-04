@@ -20,6 +20,10 @@ The HIMS database comprises several well-structured tables, each tailored to sto
 
 Each table is structured to ensure data integrity and facilitate easy access to critical information for healthcare providers and administrative staff.
 
+### Tech Used
+- **SQL**
+- **MySQL Workbench**
+
 ---
 
 Feel free to reach out if you have any questions or need further details about the database design!
